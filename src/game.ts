@@ -65,13 +65,13 @@ export class Game {
       if (player.ownsProperty(p)) return "SUCCESS";
 
       const owner = this.propertyTileOwner(p);
-      const rent = this.getPropertyRent(p.pos);
+      const rent = owner?.getProperty(p.position);
 
-      if (!owner && player.canAfford(p.price)) {
+      if (!owner && player.canAfford(p)) {
         player.buyProperty(p);
         // check if the color group is complete for double rent
         return "SUCCESS";
-      } else if (owner && player.canAffordRent(rent)) {
+      } else if (owner && rent && player.canRent(rent)) {
         player.payRent(owner, rent);
         return "SUCCESS";
       } else {
