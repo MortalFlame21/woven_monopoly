@@ -1,4 +1,18 @@
+// everything related to game state and logic
 import type { Board, BoardTile, Rolls, Player } from "./monopoly.js";
+
+// globals
+// constants
+export const g_STARTING_MONEY = 16;
+export const g_MIN_PLAYERS = 2;
+export const g_MAX_PLAYERS = 6;
+
+// players default init
+let g_PLAYERS: Player[] = ["Peter", "Billy", "Charlotte", "Sweedal"].map(
+  (name) => ({ name, position: 0, money: g_STARTING_MONEY, properties: [] }),
+);
+
+export { g_PLAYERS };
 
 // game state class
 export class Game {
