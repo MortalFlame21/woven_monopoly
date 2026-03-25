@@ -37,6 +37,8 @@ The [`<BOARD>`](#board) is a valid path to a non-empty JSON array of objects.
 
 The [`<ROLLS>`](#rolls) is a valid path to a non-empty JSON array of positive integer numbers.
 
+Additionally, see `eg/` for sample `<BOARD>` and `<ROLLS>` JSON files.
+
 ### `<OPTIONS>`
 
 ```shell
