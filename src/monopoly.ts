@@ -39,7 +39,7 @@ export const board = z.array(boardTile).min(1);
 export const rolls = z.array(z.number().int().positive()).min(1);
 
 // players
-const player = z.object({
+export const player = z.object({
   name: z.string().min(1).max(64),
   position: z.number().int().min(0),
   money: z.number().int(),
