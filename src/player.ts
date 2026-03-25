@@ -23,12 +23,20 @@ export class Player {
     this.position = (this.position + dice) % boardSize;
   }
 
-  public canAfford(amount: number) {
-    return this.money >= amount;
+  public canAfford(property: Property) {
+    return this.money >= property.price;
+  }
+
+  public canRent(property: Property) {
+    return !property.rent ? true : this.money >= property.rent;
   }
 
   public isBankrupt() {
     return this.money < 0;
+  }
+
+  public getProperty(position: number): Property | null {
+    return this.properties.get(position) || null;
   }
 
   public ownsProperty(property: Property) {
@@ -37,11 +45,16 @@ export class Player {
   }
 
   public buyProperty(property: Property) {
-    if (this.canAfford(property.price)) {
+    if (this.canAfford(property)) {
       this.money -= property.price;
       this.properties.set(property.position, property);
     }
   }
 
-  // rent later
+  public payRent(owner: Player, rent: Property) {
+    if (this.canRent(rent)) {
+      this.money -= rent.rent || 0;
+      owner.money += rent.rent || 0;
+    }
+  }
 }
