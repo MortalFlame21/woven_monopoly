@@ -57,26 +57,21 @@ export class Game {
 
   tileAction(player: Player, tile: BoardTile): GameAction {
     if (tile.type === "go") {
-      // do nothing for now
       return "SUCCESS";
     } else if (tile.type === "property") {
-      // not a fully accurate way to get property, just for validity of ownership
       const p = { ...tile, position: player.position } as Property;
       if (player.ownsProperty(p)) return "SUCCESS";
 
       const owner = this.propertyTileOwner(p);
-      const rent = owner?.getProperty(p.position);
-
-      if (!owner && player.canAfford(p)) {
+      if (!owner) {
+        // must buy property until bankrupt
         player.buyProperty(p);
-        // check if the color group is complete for double rent
-        return "SUCCESS";
-      } else if (owner && rent && player.canRent(rent)) {
-        player.payRent(owner, rent);
-        return "SUCCESS";
+        return player.isBankrupt() ? "BANKRUPT" : "SUCCESS";
       } else {
-        // owner and bankrupt or no owner and bankrupt
-        return "BANKRUPT";
+        // calculate the rent, we don't store
+        const rentAmount = this.calculateRent(owner, p);
+        player.payRent(owner, rentAmount);
+        return player.isBankrupt() ? "BANKRUPT" : "SUCCESS";
       }
     }
     // skip unknown tile types for now
