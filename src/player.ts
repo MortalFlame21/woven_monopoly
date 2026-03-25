@@ -21,8 +21,13 @@ export class Player {
   }
 
   // move player position, wraps around the board
+  // check also if move resulted in landing past go
   public rollAndMove(dice: number, boardSize: number) {
-    this.position = (this.position + dice) % boardSize;
+    const newPosition = (this.position + dice) % boardSize;
+    // we wrapped back and passed go
+    const passedGo = newPosition < this.position && newPosition > 0;
+    this.position = newPosition;
+    return passedGo;
   }
 
   public canAfford(property: Property) {
