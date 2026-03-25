@@ -1,5 +1,5 @@
 import type { Board, Rolls } from "./monopoly.js";
-import { board, rolls } from "./monopoly.js";
+import { board, rolls, colour } from "./monopoly.js";
 import { readFileSync } from "node:fs";
 
 function returnJson(path: string) {
@@ -17,10 +17,12 @@ export function parseBoard(path: string): Board {
 
   // validate board
   const res = board.safeParse(buffer);
-  if (!res.success)
+  if (!res.success) {
+    console.error(res.error);
     throw new Error(
       `ERROR: board: ${path}, failed to parse board JSON, please check format.`,
     );
+  }
 
   // go constraints
   if (res.data[0].type !== "go")
@@ -29,6 +31,21 @@ export function parseBoard(path: string): Board {
     throw new Error(
       `ERROR: board: ${path}, must contain exactly one "go" tile.`,
     );
+
+  // everything pass constraints transform color to valid colour
+  res.data = res.data.map((tile) => {
+    if (tile.type === "property") {
+      const colorRes = colour.safeParse(tile.colour.toUpperCase());
+      if (!colorRes.success) {
+        console.warn(
+          `WARNING: board: ${path}, tile "${tile.name}", invalid colour "${tile.colour}", defaulting to "UNKNOWN".`,
+        );
+        return { ...tile, colour: "UNKNOWN" };
+      }
+      return { ...tile, colour: colorRes.data };
+    }
+    return tile;
+  });
 
   return res.data;
 }

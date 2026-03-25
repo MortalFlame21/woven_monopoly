@@ -15,6 +15,17 @@ let g_PLAYERS: Player[] = ["Peter", "Billy", "Charlotte", "Sweedal"].map(
 export { g_PLAYERS };
 
 // schemas
+export const colour = z.enum([
+  "RED",
+  "BLUE",
+  "GREEN",
+  "YELLOW",
+  "PURPLE",
+  "ORANGE",
+  "BROWN",
+  "UNKNOWN",
+]);
+
 // tiles
 export const tile = z.object({
   name: z.string().min(1).max(64),
@@ -26,15 +37,7 @@ export const goTile = tile.extend({
 export const propertyTile = tile.extend({
   type: z.literal("property"),
   price: z.number().int().min(0),
-  colour: z.enum([
-    "RED",
-    "BLUE",
-    "GREEN",
-    "YELLOW",
-    "PURPLE",
-    "ORANGE",
-    "UNKNOWN",
-  ]),
+  colour: z.string().min(1).max(64),
 });
 export const boardTile = z.union([goTile, propertyTile]);
 
