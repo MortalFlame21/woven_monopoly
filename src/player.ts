@@ -1,6 +1,4 @@
 import type { Property } from "./monopoly.js";
-import { player } from "./monopoly.js";
-import { g_STARTING_MONEY } from "./game.js";
 
 // a class similar to Player type
 export class Player {
@@ -13,7 +11,7 @@ export class Player {
   // property pos : property
   properties: Map<number, Property>;
 
-  constructor(name: string, money: number = g_STARTING_MONEY) {
+  constructor(name: string, money: number) {
     // start at 0, with default money, and no properties
     this.id = ++Player.nextId;
     this.name = name;
@@ -48,17 +46,23 @@ export class Player {
     return this.properties.has(property.position);
   }
 
+  // no need for check buy rules state we MUST buy property
   public buyProperty(property: Property) {
-    if (this.canAfford(property)) {
-      this.money -= property.price;
-      this.properties.set(property.position, property);
-    }
+    this.money -= property.price;
+    this.properties.set(property.position, property);
+
+    console.log(
+      `${this.name} buys ${property.name} for $${property.price} (balance: $${this.money})`,
+    );
   }
 
-  public payRent(owner: Player, rent: Property) {
-    // if (this.canRent(rent)) {
-    //   this.money -= rent.rent || 0;
-    //   owner.money += rent.rent || 0;
-    // }
+  // same with property, we MUST buy
+  public payRent(owner: Player, rentAmount: number) {
+    this.money -= rentAmount;
+    owner.money += rentAmount;
+
+    console.log(
+      `${this.name} pays $${rentAmount} rent to ${owner.name} (balance: $${this.money})`,
+    );
   }
 }
