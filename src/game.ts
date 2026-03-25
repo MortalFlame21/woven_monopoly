@@ -36,7 +36,7 @@ export class Game {
       const cp = this.players[this.currentPlayerIdx];
 
       if (!cp.isBankrupt()) {
-        cp.rollAndMove(n, this.board.length);
+        if (cp.rollAndMove(n, this.board.length)) cp.collectGo();
 
         const tile = this.board[cp.position];
         const result = this.tileAction(cp, tile);

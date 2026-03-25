@@ -70,4 +70,10 @@ export class Player {
       `${this.name} pays $${rentAmount} rent to ${owner.name} (balance: $${this.money})`,
     );
   }
+
+  public collectGo() {
+    this.money += 1;
+
+    console.log(`${this.name} passes GO and collects $1`);
+  }
 }
