@@ -21,6 +21,8 @@ let g_PLAYERS: Player[] = ["Peter", "Billy", "Charlotte", "Sweedal"].map(
 
 export { g_PLAYERS };
 
+type GameAction = "SUCCESS" | "BANKRUPT" | "GAME_OVER";
+
 // game state class
 export class Game {
   // a circular buffer
@@ -49,15 +51,39 @@ export class Game {
       cp.rollAndMove(n, this.board.length);
 
       const tile = this.board[cp.position];
-      this.tileAction(cp.position, tile);
+      const result = this.tileAction(cp, tile);
     }
   }
 
-  tileAction(playerId: number, tile: BoardTile) {
+  tileAction(player: Player, tile: BoardTile): GameAction {
     if (tile.type === "go") {
       // do nothing for now
+      return "SUCCESS";
     } else if (tile.type === "property") {
-      // do nothing for now
+      // not a fully accurate way to get property, just for validity of ownership
+      const p = { ...tile, position: player.position } as Property;
+      if (player.ownsProperty(p)) return "SUCCESS";
+
+      const owner = this.propertyTileOwner(p);
+      const rent = this.getPropertyRent(p.pos);
+
+      if (!owner && player.canAfford(p.price)) {
+        player.buyProperty(p);
+        // check if the color group is complete for double rent
+        return "SUCCESS";
+      } else if (owner && player.canAffordRent(rent)) {
+        player.payRent(owner, rent);
+        return "SUCCESS";
+      } else {
+        // owner and bankrupt or no owner and bankrupt
+        return "BANKRUPT";
+      }
     }
+    // skip unknown tile types for now
+    return "SUCCESS";
+  }
+
+  propertyTileOwner(property: Property): Player | null {
+    return this.players.find((player) => player.ownsProperty(property)) || null;
   }
 }
