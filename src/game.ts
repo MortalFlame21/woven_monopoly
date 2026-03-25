@@ -1,18 +1,10 @@
 // everything related to game state and logic
-import type {
-  Board,
-  BoardTile,
-  Rolls,
-  Property,
-  Player as Player_t,
-} from "./monopoly.js";
+import type { Board, BoardTile, Rolls, Property } from "./monopoly.js";
 import { Player } from "./player.js";
 
 // globals
 // constants
 const g_STARTING_MONEY = 16;
-const g_MIN_PLAYERS = 2;
-const g_MAX_PLAYERS = 6;
 const g_BASE_RENT = 1;
 
 // players default init
@@ -30,29 +22,32 @@ export class Game {
   board: Board;
   rolls: Rolls;
   players: Player[];
-  // colors set, tracks if a color group is complete for double rent
-  colors: Set<string>;
   // current player
   currentPlayerIdx: number = 0;
 
   constructor(board_: Board, rolls_: Rolls, players_: Player[]) {
     this.board = board_;
     this.rolls = rolls_;
-    this.colors = new Set<string>(
-      this.board
-        .filter((tile) => tile.type === "property")
-        .map((tile) => tile.colour),
-    );
     this.players = players_;
   }
 
   play() {
     for (const n of this.rolls) {
       const cp = this.players[this.currentPlayerIdx];
-      cp.rollAndMove(n, this.board.length);
 
-      const tile = this.board[cp.position];
-      const result = this.tileAction(cp, tile);
+      if (!cp.isBankrupt()) {
+        cp.rollAndMove(n, this.board.length);
+
+        const tile = this.board[cp.position];
+        const result = this.tileAction(cp, tile);
+
+        if (result === "BANKRUPT") {
+          console.log(`${cp.name} is bankrupt!`);
+          break; // stop game player is bankrupt
+        }
+      }
+
+      this.currentPlayerIdx = (this.currentPlayerIdx + 1) % this.players.length;
     }
   }
 
