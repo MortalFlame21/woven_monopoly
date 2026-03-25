@@ -32,6 +32,8 @@ export const boardTile = z.union([goTile, propertyTile]);
 // property
 export const property = propertyTile.extend({
   position: z.number().int().min(0),
+  rent: z.number().int().min(0).nullable(),
+  owner: z.number().int().min(0).nullable(),
 });
 
 // board
