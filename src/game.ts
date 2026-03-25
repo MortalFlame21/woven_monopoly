@@ -10,9 +10,10 @@ import { Player } from "./player.js";
 
 // globals
 // constants
-export const g_STARTING_MONEY = 16;
-export const g_MIN_PLAYERS = 2;
-export const g_MAX_PLAYERS = 6;
+const g_STARTING_MONEY = 16;
+const g_MIN_PLAYERS = 2;
+const g_MAX_PLAYERS = 6;
+const g_BASE_RENT = 1;
 
 // players default init
 let g_PLAYERS: Player[] = ["Peter", "Billy", "Charlotte", "Sweedal"].map(
@@ -80,5 +81,18 @@ export class Game {
 
   propertyTileOwner(property: Property): Player | null {
     return this.players.find((player) => player.ownsProperty(property)) || null;
+  }
+
+  calculateRent(owner: Player, property: Property): number {
+    // filter via color of tile
+    const colourGroups = this.board.filter(
+      (tile) => tile.type === "property" && tile.colour === property.colour,
+    );
+    // check the filter, ensure every property is owned
+    const ownsAll = colourGroups.every((p) => {
+      const boardIdx = this.board.indexOf(p);
+      return owner.getProperty(boardIdx) !== null;
+    });
+    return ownsAll ? g_BASE_RENT * 2 : g_BASE_RENT;
   }
 }
