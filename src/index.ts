@@ -1,5 +1,6 @@
 import { Command } from "commander";
 import { parseBoard, parseRolls } from "./parsing.js";
+
 const program = new Command();
 
 program
@@ -9,11 +10,15 @@ program
   .argument("<board>", "Path to the board JSON file")
   .argument("<rolls>", "Path to the rolls JSON file")
   .action((boardPath, rollsPath) => {
-    const board = parseBoard(boardPath);
-    const rolls = parseRolls(rollsPath);
-
-    console.log(`${board}`);
-    console.log(`${rolls}`);
+    try {
+      const board = parseBoard(boardPath);
+      const rolls = parseRolls(rollsPath);
+      console.log(`${board}`);
+      console.log(`${rolls}`);
+    } catch (err) {
+      console.error(err instanceof Error ? err.message : String(err));
+      process.exit(1);
+    }
   });
 
 program.parse();
