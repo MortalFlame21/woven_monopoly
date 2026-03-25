@@ -1,5 +1,11 @@
 // everything related to game state and logic
-import type { Board, BoardTile, Rolls, Player } from "./monopoly.js";
+import type {
+  Board,
+  BoardTile,
+  Rolls,
+  Player as Player_t,
+} from "./monopoly.js";
+import { Player } from "./player.js";
 
 // globals
 // constants
@@ -9,7 +15,7 @@ export const g_MAX_PLAYERS = 6;
 
 // players default init
 let g_PLAYERS: Player[] = ["Peter", "Billy", "Charlotte", "Sweedal"].map(
-  (name) => ({ name, position: 0, money: g_STARTING_MONEY, properties: [] }),
+  (name) => new Player(name, 0, g_STARTING_MONEY, []),
 );
 
 export { g_PLAYERS };
@@ -37,5 +43,12 @@ export class Game {
         .map((tile) => tile.colour.toUpperCase()),
     );
     this.players = players_;
+  }
+
+  play() {
+    for (const n of this.rolls) {
+      const currentPlayer = this.players[this.currentPlayerIdx];
+      currentPlayer.roll(n, this.board.length);
+    }
   }
 }
