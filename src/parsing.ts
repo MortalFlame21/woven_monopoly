@@ -1,5 +1,5 @@
-import type { Board, Rolls } from "./monopoly.js";
-import { board, rolls, colour } from "./monopoly.js";
+import type { Board, Rolls } from "./schema.js";
+import { board, rolls, colour } from "./schema.js";
 import { readFileSync } from "node:fs";
 
 function returnJson(path: string) {

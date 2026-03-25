@@ -1,4 +1,4 @@
-import type { Property } from "./monopoly.js";
+import type { Property } from "./schema.js";
 
 // a class similar to Player type
 export class Player {

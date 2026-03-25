@@ -1,5 +1,5 @@
 // everything related to game state and logic
-import type { Board, BoardTile, Rolls, Property } from "./monopoly.js";
+import type { Board, BoardTile, Rolls, Property } from "./schema.js";
 import { Player } from "./player.js";
 
 // globals
