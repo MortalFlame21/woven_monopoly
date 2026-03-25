@@ -50,6 +50,9 @@ export const player = z.object({
 export const players = z.array(player).min(0);
 
 // types
+export type Tile = z.infer<typeof tile>;
+export type GoTile = z.infer<typeof goTile>;
+export type PropertyTile = z.infer<typeof propertyTile>;
 export type BoardTile = z.infer<typeof boardTile>;
 export type Board = z.infer<typeof board>;
 export type Rolls = z.infer<typeof rolls>;
