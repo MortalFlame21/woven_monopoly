@@ -17,22 +17,20 @@ export function parseBoard(path: string): Board {
 
   // validate board
   const res = board.safeParse(buffer);
-  if (!res.success) {
-    console.error(res.error);
+  if (!res.success)
     throw new Error(
       `ERROR: board: ${path}, failed to parse board JSON, please check format.`,
     );
-  }
 
   // go constraints
   if (res.data[0].type !== "go")
-    throw new Error(`ERROR: ${path}, first tile must be of type "go".`);
+    throw new Error(`ERROR: board: ${path}, first tile must be of type "go".`);
   if (res.data.filter((tile) => tile.type === "go").length !== 1)
     throw new Error(
       `ERROR: board: ${path}, must contain exactly one "go" tile.`,
     );
 
-  // everything pass constraints transform color to valid colour
+  // everything pass constraints validate color and transform colour
   res.data = res.data.map((tile) => {
     if (tile.type === "property") {
       const colorRes = colour.safeParse(tile.colour.toUpperCase());
