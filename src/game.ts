@@ -95,4 +95,19 @@ export class Game {
     });
     return ownsAll ? g_BASE_RENT * 2 : g_BASE_RENT;
   }
+
+  leaderboard() {
+    const sorted = [...this.players].sort((a, b) => b.money - a.money);
+    console.log(`\n${sorted[0].name} wins!\n`);
+    console.log("Leaderboard:");
+    sorted.forEach((player, idx) => {
+      console.log(`\t#${idx + 1}. ${player.name} - $${player.money}`);
+      console.log("\t\tProperties:");
+      if (player.properties.size === 0) console.log("\t\t\t(none)");
+      else
+        player.properties.forEach((p) => {
+          console.log(`\t\t\t${p.name}`);
+        });
+    });
+  }
 }
