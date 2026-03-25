@@ -7,19 +7,12 @@ export const g_STARTING_MONEY = 16;
 export const g_MIN_PLAYERS = 2;
 export const g_MAX_PLAYERS = 6;
 
-// game state
-// a circular buffer
-let g_BOARD: Board = [];
-// properties map, tracks player property ownership
-let g_PROPERTIES = new Map<number, BoardTile>();
-// colors set, tracks if a color group is complete for double rent
-let g_COLORS = new Set<string>();
 // players default init
 let g_PLAYERS: Player[] = ["Peter", "Billy", "Charlotte", "Sweedal"].map(
   (name) => ({ name, position: 0, money: g_STARTING_MONEY, properties: [] }),
 );
 
-export { g_BOARD, g_PROPERTIES, g_PLAYERS, g_COLORS };
+export { g_PLAYERS };
 
 // schemas
 // tiles
@@ -33,7 +26,15 @@ export const goTile = tile.extend({
 export const propertyTile = tile.extend({
   type: z.literal("property"),
   price: z.number().int().min(0),
-  colour: z.string().min(1).max(64),
+  colour: z.enum([
+    "RED",
+    "BLUE",
+    "GREEN",
+    "YELLOW",
+    "PURPLE",
+    "ORANGE",
+    "UNKNOWN",
+  ]),
 });
 export const boardTile = z.union([goTile, propertyTile]);
 
