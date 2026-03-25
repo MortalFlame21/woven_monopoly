@@ -1,5 +1,6 @@
 // schemas, and types related with game state
 import { z } from "zod";
+import { g_MIN_PLAYERS, g_MAX_PLAYERS } from "./game.js";
 
 // schemas
 export const colour = z.enum([
