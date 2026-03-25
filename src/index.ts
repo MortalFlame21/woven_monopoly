@@ -1,7 +1,9 @@
 import { Command } from "commander";
 import { parseBoard, parseRolls } from "./parsing.js";
+import { g_PLAYERS, Game } from "./game.js";
 
 const program = new Command();
+let game: Game;
 
 program
   .name("Monopoly")
@@ -13,8 +15,11 @@ program
     try {
       const board = parseBoard(boardPath);
       const rolls = parseRolls(rollsPath);
-      console.log(`${board}`);
-      console.log(`${rolls}`);
+
+      game = new Game(board, rolls, g_PLAYERS);
+
+      game.play();
+      game.leaderboard();
     } catch (err) {
       console.error(err instanceof Error ? err.message : String(err));
       process.exit(1);
