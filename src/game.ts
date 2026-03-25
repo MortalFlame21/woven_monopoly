@@ -3,6 +3,7 @@ import type {
   Board,
   BoardTile,
   Rolls,
+  Property,
   Player as Player_t,
 } from "./monopoly.js";
 import { Player } from "./player.js";
@@ -15,7 +16,7 @@ export const g_MAX_PLAYERS = 6;
 
 // players default init
 let g_PLAYERS: Player[] = ["Peter", "Billy", "Charlotte", "Sweedal"].map(
-  (name) => new Player(name, 0, g_STARTING_MONEY, []),
+  (name) => new Player(name, g_STARTING_MONEY),
 );
 
 export { g_PLAYERS };
@@ -26,8 +27,6 @@ export class Game {
   board: Board;
   rolls: Rolls;
   players: Player[];
-  // properties map, tracks player property ownership
-  properties: Map<number, BoardTile[]>;
   // colors set, tracks if a color group is complete for double rent
   colors: Set<string>;
   // current player
@@ -36,19 +35,29 @@ export class Game {
   constructor(board_: Board, rolls_: Rolls, players_: Player[]) {
     this.board = board_;
     this.rolls = rolls_;
-    this.properties = new Map<number, BoardTile[]>();
     this.colors = new Set<string>(
       this.board
         .filter((tile) => tile.type === "property")
-        .map((tile) => tile.colour.toUpperCase()),
+        .map((tile) => tile.colour),
     );
     this.players = players_;
   }
 
   play() {
     for (const n of this.rolls) {
-      const currentPlayer = this.players[this.currentPlayerIdx];
-      currentPlayer.roll(n, this.board.length);
+      const cp = this.players[this.currentPlayerIdx];
+      cp.rollAndMove(n, this.board.length);
+
+      const tile = this.board[cp.position];
+      this.tileAction(cp.position, tile);
+    }
+  }
+
+  tileAction(playerId: number, tile: BoardTile) {
+    if (tile.type === "go") {
+      // do nothing for now
+    } else if (tile.type === "property") {
+      // do nothing for now
     }
   }
 }
