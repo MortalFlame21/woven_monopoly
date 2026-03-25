@@ -30,7 +30,9 @@ export const propertyTile = tile.extend({
 export const boardTile = z.union([goTile, propertyTile]);
 
 // property
-export const property = propertyTile;
+export const property = propertyTile.extend({
+  position: z.number().int().min(0),
+});
 
 // board
 export const board = z.array(boardTile).min(1);
