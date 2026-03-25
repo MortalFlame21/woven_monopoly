@@ -4,6 +4,9 @@ import { g_STARTING_MONEY } from "./game.js";
 
 // a class similar to Player type
 export class Player {
+  private static nextId: number = 0;
+
+  id: number;
   name: string;
   position: number;
   money: number;
@@ -12,6 +15,7 @@ export class Player {
 
   constructor(name: string, money: number = g_STARTING_MONEY) {
     // start at 0, with default money, and no properties
+    this.id = ++Player.nextId;
     this.name = name;
     this.position = 0;
     this.money = money;
@@ -27,8 +31,8 @@ export class Player {
     return this.money >= property.price;
   }
 
-  public canRent(property: Property) {
-    return !property.rent ? true : this.money >= property.rent;
+  public canRent(rentAmount: number) {
+    return this.money >= rentAmount;
   }
 
   public isBankrupt() {
@@ -52,9 +56,9 @@ export class Player {
   }
 
   public payRent(owner: Player, rent: Property) {
-    if (this.canRent(rent)) {
-      this.money -= rent.rent || 0;
-      owner.money += rent.rent || 0;
-    }
+    // if (this.canRent(rent)) {
+    //   this.money -= rent.rent || 0;
+    //   owner.money += rent.rent || 0;
+    // }
   }
 }
