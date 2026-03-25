@@ -1,6 +1,5 @@
 // schemas, and types related with game state
 import { z } from "zod";
-import { g_MIN_PLAYERS, g_MAX_PLAYERS } from "./game.js";
 
 // schemas
 export const colour = z.enum([
@@ -48,7 +47,7 @@ export const player = z.object({
   properties: z.array(property),
 });
 
-export const players = z.array(player).min(g_MIN_PLAYERS).max(g_MAX_PLAYERS);
+export const players = z.array(player).min(0);
 
 // types
 export type BoardTile = z.infer<typeof boardTile>;
